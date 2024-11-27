@@ -1,9 +1,14 @@
 interface UserProfileResponse {
-    status: 0,
+    status: number,
     message: string,
     body: {
-        id: string,
-        email: string
+        email: string,
+        firstName: string,
+        lastName: string,
+        userName: string,
+        createdAt: string,
+        updatedAt: string,
+        id: string
     }
 }
 interface UpdateProfileBody {
@@ -21,6 +26,17 @@ interface LoginResponse {
     }
 }
 interface Token {
+    token: string | null,
+}
+
+interface User {
+    email: string | null,
+    firstName: string | null,
+    lastName: string | null,
+    userName: string | null,
+    createdAt: string | null,
+    updatedAt: string | null,
+    id: string | null
     token: string | null,
 }
 

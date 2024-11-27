@@ -1,7 +1,10 @@
-import React, {useState} from "react";
-import {useLoginMutation} from "../authSlice";
+import React, {useEffect, useState} from "react";
+import {selectUserProfile, useLoginMutation} from "../authSlice";
 import {FetchBaseQueryError} from "@reduxjs/toolkit/query";
 import {useNavigate} from "react-router-dom";
+import {useAppSelector} from "../../../app/hooks";
+import {isFulfilled} from "@reduxjs/toolkit";
+import {isAuthenticated} from "../utils";
 
 type ErrorDataObject = {
     message: string;
@@ -18,18 +21,29 @@ function isErrorDataObject(data: unknown): data is ErrorDataObject {
     return typeof data === 'object' && data != null && 'message' in data && 'status' in data
 }
 
-export default function LogInForm() {
+export default function LogInForm({redirect}: {redirect: string}) {
     const [login, {data, error, isError, isSuccess}] = useLoginMutation();
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
-    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    const navigate = useNavigate();
+    const user = useAppSelector(selectUserProfile)
+    useEffect(() => {
+        if(isAuthenticated(user)) {
+            navigate(redirect);
+        }
+    }, [user])
+
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
         const form = event.target as HTMLFormElement;
         if (form.checkValidity()) {
-            login({
+            await login({
                 email: email,
                 password: password,
-            })
+            }).unwrap()
+            if (isFulfilled()) {
+                navigate(redirect)
+            }
         }
     }
     return (

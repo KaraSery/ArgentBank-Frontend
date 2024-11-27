@@ -15,6 +15,7 @@ import Home from "./pages/Home/Home";
 import { store } from "./app/store"
 
 import "/public/css/main.css"
+import ProtectedRoute from "./features/auth/ProtectedRoute";
 
 const router = createBrowserRouter([
     {
@@ -26,12 +27,14 @@ const router = createBrowserRouter([
                 element: <Home/>
             },
             {
-                path: '/sign-in',
+                path: '/login',
                 element: <LogIn/>
             },
             {
                 path: '/user',
-                element: <User/>
+                element: (<ProtectedRoute>
+                    <User/>
+                </ProtectedRoute>)
             }
         ]
     },

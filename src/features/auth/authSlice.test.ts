@@ -11,7 +11,6 @@ describe("authReducer", () => {
             email: "tony@stark.com",
             password: "password123",
         })).unwrap()
-
         expect(store.getState().auth.token).toBeTruthy()
     })
 })
