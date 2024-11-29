@@ -1,4 +1,4 @@
-import {createAsyncThunk, createSelector, createSlice} from "@reduxjs/toolkit";
+import {createSelector, createSlice} from "@reduxjs/toolkit";
 import {apiSlice} from "../api/apiSlice";
 import {RootState} from "../../app/store";
 
@@ -14,7 +14,21 @@ export const apiSliceWithAuthentication = apiSlice.injectEndpoints({
             async onQueryStarted(body, {dispatch, queryFulfilled}) {
                 try {
                     const {data} = await queryFulfilled
-                    dispatch(apiSliceWithAuthentication.endpoints.getUserProfile.initiate())
+                    localStorage.setItem('token', data.body.token)
+                    dispatch(apiSliceWithAuthentication.util.invalidateTags(['Auth']))
+                } catch (error) {
+                }
+            }
+        }),
+        logout: builder.mutation({
+            queryFn: async()=> {
+                return {data: 'logout'}
+            },
+            async onQueryStarted(body, {dispatch, queryFulfilled}) {
+                try {
+                    localStorage.removeItem('token')
+                    await queryFulfilled
+                    dispatch(apiSliceWithAuthentication.util.invalidateTags(['Auth']))
                 } catch (error) {
                 }
             }
@@ -44,22 +58,15 @@ export const apiSliceWithAuthentication = apiSlice.injectEndpoints({
     })
 })
 
-export const logout = createAsyncThunk('auth/logout', async (_unused, { dispatch }) => {
-    localStorage.removeItem('token')
-    dispatch(
-        apiSliceWithAuthentication.endpoints.getUserProfile.initiate()
-    )
-})
-
 export const {
     useLoginMutation,
-    useSignupQuery,
+    useLogoutMutation,
     useGetUserProfileQuery,
     useUpdateUserProfileMutation
 } = apiSliceWithAuthentication
 
 const initialState: User = {
-    token: localStorage.getItem('token'),
+    token: null,
     email: null,
     firstName: null,
     lastName: null,
@@ -72,22 +79,19 @@ const initialState: User = {
 export const authSlice = createSlice({
     name: 'auth',
     initialState,
-    reducers: {},
+    reducers: {
+        setToken: (state, action: {payload: string}) => {
+            state.token = action.payload
+        }
+    },
     extraReducers(builder) {
         builder
-            .addCase(logout.fulfilled, () => initialState)
-            .addMatcher(apiSliceWithAuthentication.endpoints.login.matchFulfilled, (state, action) => {
-                localStorage.setItem('token', action.payload.body.token)
-                state.token = action.payload.body.token
-            })
-            .addMatcher(apiSliceWithAuthentication.endpoints.getUserProfile.matchFulfilled, (state, action) => {
-                const user = action.payload.body
-                console.log(state, user)
-                return {...state, ...user}
-            })
+            .addMatcher(apiSliceWithAuthentication.endpoints.logout.matchFulfilled, () =>  initialState)
+            .addMatcher(apiSliceWithAuthentication.endpoints.login.matchFulfilled, (state, action) => {state.token = action.payload.body.token})
+            .addMatcher(apiSliceWithAuthentication.endpoints.getUserProfile.matchFulfilled, (state, action) => {return {...state, ...action.payload.body}})
     }
 })
-
+export const {setToken} = authSlice.actions
 export const selectUserProfile = createSelector(
     (state: RootState) => state.auth,
     (res) => res

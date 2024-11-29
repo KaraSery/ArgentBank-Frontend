@@ -16,6 +16,12 @@ import { store } from "./app/store"
 
 import "/public/css/main.css"
 import ProtectedRoute from "./features/auth/ProtectedRoute";
+import {apiSliceWithAuthentication, setToken} from "./features/auth/authSlice";
+
+if ('token' in localStorage) {
+    store.dispatch(setToken(localStorage.getItem("token")!));
+    store.dispatch(apiSliceWithAuthentication.endpoints.getUserProfile.initiate())
+}
 
 const router = createBrowserRouter([
     {

@@ -1,10 +1,19 @@
+import {useState} from "react";
+import EditUserForm from "../../features/auth/EditUserForm/EditUserForm";
+
 export default function User() {
+    const [formDisplay, setFormDisplay] = useState(false);
     return (
         <>
-            <div className="header">
-                <h1>Welcome back<br/>Tony Jarvis!</h1>
-                <button className="edit-button">Edit Name</button>
-            </div>
+            {formDisplay ?
+
+                <EditUserForm handleCancel={() => setFormDisplay(false)}/>:
+                (<div className='header'>
+                    <h1>Welcome back<br/>Tony Jarvis!</h1>
+                    <button onClick={() => setFormDisplay(true)} className="edit-button">Edit Name</button>
+                </div>)
+            }
+
             <h2 className="sr-only">Accounts</h2>
             <section className="account">
                 <div className="account-content-wrapper">

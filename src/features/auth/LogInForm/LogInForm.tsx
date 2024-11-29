@@ -1,25 +1,9 @@
 import React, {useEffect, useState} from "react";
 import {selectUserProfile, useLoginMutation} from "../authSlice";
-import {FetchBaseQueryError} from "@reduxjs/toolkit/query";
 import {useNavigate} from "react-router-dom";
 import {useAppSelector} from "../../../app/hooks";
 import {isFulfilled} from "@reduxjs/toolkit";
-import {isAuthenticated} from "../utils";
-
-type ErrorDataObject = {
-    message: string;
-    status: number;
-}
-
-function isFetchBaseQueryError(
-    error: unknown
-): error is FetchBaseQueryError {
-    return typeof error === 'object' && error != null && 'status' in error
-}
-
-function isErrorDataObject(data: unknown): data is ErrorDataObject {
-    return typeof data === 'object' && data != null && 'message' in data && 'status' in data
-}
+import {isAuthenticated, isErrorDataObject, isFetchBaseQueryError} from "../utils";
 
 export default function LogInForm({redirect}: {redirect: string}) {
     const [login, {data, error, isError, isSuccess}] = useLoginMutation();

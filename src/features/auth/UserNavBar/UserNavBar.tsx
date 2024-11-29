@@ -1,11 +1,16 @@
-import {useAppDispatch, useAppSelector} from "../../../app/hooks";
-import {apiSliceWithAuthentication, logout, selectUserProfile, useGetUserProfileQuery} from "../authSlice";
+import {useAppSelector} from "../../../app/hooks";
+import {
+    selectUserProfile, useGetUserProfileQuery,
+    useLogoutMutation
+} from "../authSlice";
 import {isAuthenticated} from "../utils";
 import {Link} from "react-router-dom";
 
 export default function UserNavBar() {
     const user = useAppSelector(selectUserProfile)
-    const dispatch = useAppDispatch()
+    const [logout] = useLogoutMutation()
+    useGetUserProfileQuery()
+
     return (
         <nav className="main-nav">
             <Link className="main-nav-logo" to="">
@@ -21,9 +26,9 @@ export default function UserNavBar() {
                     <div>
                         <Link className="main-nav-item" to="/user">
                             <i className="fa fa-user-circle"></i>
-                            {user.firstName}
+                            {user.userName}
                         </Link>
-                        <a className="main-nav-item" href="#" onClick={() => dispatch(logout())}>
+                        <a className="main-nav-item" href="#" onClick={() => logout(undefined)}>
                             <i className="fa fa-sign-out"></i>
                             Sign Out
                         </a>
