@@ -15,9 +15,7 @@ export const apiSlice = createApi({
             }
         },
     }),
-    tagTypes: ['Auth'],
     endpoints: (builder) => ({
-
     })
 })
 
