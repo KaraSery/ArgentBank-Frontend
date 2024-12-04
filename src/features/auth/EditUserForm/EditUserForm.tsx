@@ -1,34 +1,56 @@
 import {selectUserProfile, useUpdateUserProfileMutation} from "../authSlice";
-import React, {useCallback, useState} from "react";
-import {isErrorDataObject, isFetchBaseQueryError} from "../utils";
+import React, {useEffect, useState} from "react";
+import {getErrorMessage, isAuthenticated} from "../utils";
 import {useAppSelector} from "../../../app/hooks";
-
-export default function EditUserForm({handleCancel}: {handleCancel: () => void}) {
-    const [updateUserProfile, {status, data, error, isError, isSuccess}] = useUpdateUserProfileMutation();
-    const [userName, setUserName] = useState<string>('');
+import {useNavigate} from "react-router-dom";
+import './EditForm.css'
+export default function EditUserForm({handleCancel}: { handleCancel: () => void }) {
+    const [updateUserProfile, {error, data, isError, isSuccess}] = useUpdateUserProfileMutation();
     const user = useAppSelector(selectUserProfile)
-    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>)=> {
+    const [userName, setUserName] = useState<string>(user.userName!);
+    const navigate = useNavigate();
+    const [errorMessage, setErrorMessage] = useState<string>('');
+
+    useEffect(() => {
+        if(isError) setErrorMessage(getErrorMessage(error))
+    }, [isError])
+
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
         const form = event.target as HTMLFormElement;
+        if (!isAuthenticated(user)) {
+            navigate("/login");
+        }
         if (form.checkValidity()) {
-            await updateUserProfile({
-                userName: userName,
-            });
+            try {
+                await updateUserProfile({
+                    userName: userName,
+                }).unwrap();
+            }catch (error) {
+                console.error(error);
+            }
         }
     }
     return (
-        <form onSubmit={handleSubmit}>
-            {
-                isError && isFetchBaseQueryError(error) && isErrorDataObject(error.data) &&
-                <div>
-                    {error.data.message}
+        <form className={'edit-user-form'} onSubmit={handleSubmit}>
+            <h1>Edit user info</h1>
+            {isError &&
+                <div className={'error'}>
+                    {errorMessage}
                 </div>
             }
+            {isSuccess &&
+                <div className={'success'}>
+                    {data.message}
+                </div>
+            }
+
             <div className="input-wrapper">
-                <label htmlFor="username">Username</label
+                <label htmlFor="username">User name</label
                 ><input onInput={(e) => {
                 setUserName(e.currentTarget.value)
-            }} placeholder={user.userName!} required data-testid="username-input" type="text" id="username" name="username"/>
+            }} value={userName} required data-testid="username-input" type="text" id="username"
+                        name="username"/>
             </div>
             <div className="input-wrapper">
                 <label htmlFor="firstname">First name</label
@@ -38,8 +60,12 @@ export default function EditUserForm({handleCancel}: {handleCancel: () => void})
                 <label htmlFor="lastname">Last name</label
                 ><input value={user.lastName!} disabled type="text" id="lastname" name="lastname"/>
             </div>
-            <button type='submit' data-testid="save-button" className="sign-in-button">Save</button>
-            <button type='button' onClick={handleCancel} data-testid="cancel-button" className="sign-in-button">Cancel</button>
+            <div className={'submit-cancel'}>
+                <button type='submit' data-testid="save-button" className="sign-in-button">Save</button>
+                <button type='button' onClick={handleCancel} data-testid="cancel-button"
+                        className="sign-in-button">Cancel
+                </button>
+            </div>
         </form>
     )
 }

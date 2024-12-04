@@ -88,11 +88,9 @@ export const authSlice = createSlice({
         builder
             .addMatcher(apiSliceWithAuthentication.endpoints.logout.matchFulfilled, () => initialState)
             .addMatcher(apiSliceWithAuthentication.endpoints.login.matchFulfilled, (state, action) => {
-                state.token = action.payload.body.token
-            })
+                return {...state, ...action.payload.body}})
             .addMatcher(apiSliceWithAuthentication.endpoints.getUserProfile.matchFulfilled, (state, action) => {
-                return {...state, ...action.payload.body}
-            })
+                return {...state, ...action.payload.body}})
     }
 })
 export const {setToken} = authSlice.actions

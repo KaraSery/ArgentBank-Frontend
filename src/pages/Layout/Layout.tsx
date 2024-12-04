@@ -5,11 +5,9 @@ import MainFooter from "../../components/MainFooter/MainFooter";
 export default function Layout() {
     return (
         <>
-            <MainHeader />
-            <main>
-                <Outlet/>
-            </main>
-            <MainFooter />
+            <MainHeader/>
+            <Outlet/>
+            <MainFooter/>
         </>
     )
 }

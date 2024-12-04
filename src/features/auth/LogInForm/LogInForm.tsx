@@ -2,40 +2,41 @@ import React, {useEffect, useState} from "react";
 import {selectUserProfile, useLoginMutation} from "../authSlice";
 import {useNavigate} from "react-router-dom";
 import {useAppSelector} from "../../../app/hooks";
-import {isFulfilled} from "@reduxjs/toolkit";
-import {isAuthenticated, isErrorDataObject, isFetchBaseQueryError} from "../utils";
+import {
+    getErrorMessage, isAuthenticated
+} from "../utils";
 
 export default function LogInForm({redirect}: {redirect: string}) {
     const [login, {data, error, isError, isSuccess}] = useLoginMutation();
+    const [errorMessage, setErrorMessage] = useState<string>('');
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const navigate = useNavigate();
     const user = useAppSelector(selectUserProfile)
     useEffect(() => {
-        if(isAuthenticated(user)) {
-            navigate(redirect);
-        }
-    }, [user])
+        if(isAuthenticated(user) || isSuccess) navigate(redirect);
+        if(isError) setErrorMessage(getErrorMessage(error))
+    }, [user, isError, isSuccess])
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault()
         const form = event.target as HTMLFormElement;
         if (form.checkValidity()) {
-            await login({
-                email: email,
-                password: password,
-            }).unwrap()
-            if (isFulfilled()) {
-                navigate(redirect)
+            try {
+                await login({
+                    email: email,
+                    password: password,
+                }).unwrap()
+            } catch (error) {
+                console.error(error)
             }
         }
     }
     return (
         <form id='login-form' data-testid="sign-in-form" onSubmit={handleSubmit}>
-            {
-                isError && isFetchBaseQueryError(error) && isErrorDataObject(error.data) &&
-                <div>
-                    {error.data.message}
+            { isError &&
+                <div className={'error'}>
+                    {errorMessage}
                 </div>
             }
             <div className="input-wrapper">

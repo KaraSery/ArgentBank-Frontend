@@ -8,7 +8,7 @@ export const apiSlice = createApi({
     baseQuery: fetchBaseQuery({
         baseUrl: BASE_URL,
         prepareHeaders: (headers, {getState}) => {
-            const authState: Token = (getState() as RootState).auth;
+            const authState = (getState() as RootState).auth;
             if (authState.token !== null) {
                 headers.set('Authorization', `Bearer ${authState.token}`);
                 return headers;

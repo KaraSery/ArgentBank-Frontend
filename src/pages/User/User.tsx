@@ -4,7 +4,7 @@ import EditUserForm from "../../features/auth/EditUserForm/EditUserForm";
 export default function User() {
     const [formDisplay, setFormDisplay] = useState(false);
     return (
-        <>
+        <main className={'main'}>
             {formDisplay ?
 
                 <EditUserForm handleCancel={() => setFormDisplay(false)}/>:
@@ -45,6 +45,6 @@ export default function User() {
                     <button className="transaction-button">View transactions</button>
                 </div>
             </section>
-        </>
+        </main>
     )
 }
