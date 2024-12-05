@@ -1,6 +1,7 @@
 import {useState} from "react";
 import EditUserForm from "../../features/auth/EditUserForm/EditUserForm";
-
+import AccountPreview from "../../components/AccountPreview/AccountPreview";
+import './User.scss'
 export default function User() {
     const [formDisplay, setFormDisplay] = useState(false);
     return (
@@ -15,36 +16,21 @@ export default function User() {
             }
 
             <h2 className="sr-only">Accounts</h2>
-            <section className="account">
-                <div className="account-content-wrapper">
-                    <h3 className="account-title">Argent Bank Checking (x8349)</h3>
-                    <p className="account-amount">$2,082.79</p>
-                    <p className="account-amount-description">Available Balance</p>
-                </div>
-                <div className="account-content-wrapper cta">
-                    <button className="transaction-button">View transactions</button>
-                </div>
-            </section>
-            <section className="account">
-                <div className="account-content-wrapper">
-                    <h3 className="account-title">Argent Bank Savings (x6712)</h3>
-                    <p className="account-amount">$10,928.42</p>
-                    <p className="account-amount-description">Available Balance</p>
-                </div>
-                <div className="account-content-wrapper cta">
-                    <button className="transaction-button">View transactions</button>
-                </div>
-            </section>
-            <section className="account">
-                <div className="account-content-wrapper">
-                    <h3 className="account-title">Argent Bank Credit Card (x8349)</h3>
-                    <p className="account-amount">$184.30</p>
-                    <p className="account-amount-description">Current Balance</p>
-                </div>
-                <div className="account-content-wrapper cta">
-                    <button className="transaction-button">View transactions</button>
-                </div>
-            </section>
+            <AccountPreview
+                balance={2082.79}
+                type={'Available'}
+                x={8349}
+                name={'Checking'}/>
+            <AccountPreview
+                balance={10928.42}
+                type={'Available'}
+                x={6712}
+                name={'Checking'}/>
+            <AccountPreview
+                balance={184.30}
+                type={'Current'}
+                x={8349}
+                name={'Credit Card'}/>
         </main>
     )
 }

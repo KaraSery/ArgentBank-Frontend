@@ -14,7 +14,8 @@ import Home from "./pages/Home/Home";
 
 import { store } from "./app/store"
 
-import "/public/css/main.css"
+import "./main.scss"
+
 import ProtectedRoute from "./features/auth/ProtectedRoute";
 import {apiSliceWithAuthentication, setToken} from "./features/auth/authSlice";
 

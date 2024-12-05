@@ -6,6 +6,8 @@ import {
     getErrorMessage, isAuthenticated
 } from "../utils";
 
+import './LoginForm.scss'
+
 export default function LogInForm({redirect}: {redirect: string}) {
     const [login, {data, error, isError, isSuccess}] = useLoginMutation();
     const [errorMessage, setErrorMessage] = useState<string>('');

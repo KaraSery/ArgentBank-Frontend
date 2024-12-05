@@ -1,3 +1,4 @@
+import './MainFooter.scss'
 export default function MainFooter() {
     return (
         <footer className="footer">

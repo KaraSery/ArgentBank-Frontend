@@ -3,7 +3,7 @@ import React, {useEffect, useState} from "react";
 import {getErrorMessage, isAuthenticated} from "../utils";
 import {useAppSelector} from "../../../app/hooks";
 import {useNavigate} from "react-router-dom";
-import './EditForm.css'
+import './EditForm.scss'
 export default function EditUserForm({handleCancel}: { handleCancel: () => void }) {
     const [updateUserProfile, {error, data, isError, isSuccess}] = useUpdateUserProfileMutation();
     const user = useAppSelector(selectUserProfile)
@@ -61,9 +61,9 @@ export default function EditUserForm({handleCancel}: { handleCancel: () => void 
                 ><input value={user.lastName!} disabled type="text" id="lastname" name="lastname"/>
             </div>
             <div className={'submit-cancel'}>
-                <button type='submit' data-testid="save-button" className="sign-in-button">Save</button>
+                <button type='submit' data-testid="save-button" className="button">Save</button>
                 <button type='button' onClick={handleCancel} data-testid="cancel-button"
-                        className="sign-in-button">Cancel
+                        className="button">Cancel
                 </button>
             </div>
         </form>

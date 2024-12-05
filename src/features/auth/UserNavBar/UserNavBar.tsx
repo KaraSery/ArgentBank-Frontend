@@ -5,7 +5,7 @@ import {
 } from "../authSlice";
 import {isAuthenticated} from "../utils";
 import {Link} from "react-router-dom";
-
+import './UserNavBar.scss'
 export default function UserNavBar() {
     const user = useAppSelector(selectUserProfile)
     const [logout] = useLogoutMutation()
@@ -23,7 +23,7 @@ export default function UserNavBar() {
             </Link>
             {isAuthenticated(user) ?
                 (
-                    <div>
+                    <div className={'main-nav-items-wrapper'}>
                         <Link className="main-nav-item" to="/user">
                             <i className="fa fa-user-circle"></i>
                             {user.userName}
