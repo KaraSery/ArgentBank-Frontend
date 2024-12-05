@@ -1,6 +1,6 @@
 import {createSelector, createSlice} from "@reduxjs/toolkit";
 import {apiSlice} from "../api/apiSlice";
-import {RootState} from "../../app/store";
+import type {RootState} from "../../app/store";
 
 export const apiSliceWithAuthentication = apiSlice.enhanceEndpoints({addTagTypes: ['Auth']})
     .injectEndpoints({

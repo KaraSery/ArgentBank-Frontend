@@ -4,6 +4,14 @@
     width: fit-content;
     margin: auto;
     margin-bottom: 30px;
+    .error {
+        color: #FF0000FF;
+        margin-bottom: 10px;
+    }
+    .success {
+        color: #00bc77;
+        margin-bottom: 10px;
+    }
     .input-wrapper {
         display: flex;
         flex-direction: row;

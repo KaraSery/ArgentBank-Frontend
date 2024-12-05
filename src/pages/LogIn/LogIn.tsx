@@ -1,6 +1,6 @@
 import React from "react";
 import LogInForm from "../../features/auth/LogInForm/LogInForm";
-
+import './Login.scss'
 export default function LogIn() {
 
     return (

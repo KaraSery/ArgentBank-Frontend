@@ -35,7 +35,7 @@ export default function LogInForm({redirect}: {redirect: string}) {
         }
     }
     return (
-        <form id='login-form' data-testid="sign-in-form" onSubmit={handleSubmit}>
+        <form id='login-form' className={'login-form'} data-testid="sign-in-form" onSubmit={handleSubmit}>
             { isError &&
                 <div className={'error'}>
                     {errorMessage}
