@@ -2,7 +2,10 @@ import {useState} from "react";
 import EditUserForm from "../../features/auth/EditUserForm/EditUserForm";
 import AccountPreview from "../../components/AccountPreview/AccountPreview";
 import './User.scss'
+import { useAppSelector } from "../../app/hooks"
+import { selectUserProfile } from "../../features/auth/authSlice"
 export default function User() {
+    const user = useAppSelector(selectUserProfile)
     const [formDisplay, setFormDisplay] = useState(false);
     return (
         <main className={'main'}>
@@ -10,7 +13,7 @@ export default function User() {
 
                 <EditUserForm handleCancel={() => setFormDisplay(false)}/>:
                 (<div className='header'>
-                    <h1>Welcome back<br/>Tony Jarvis!</h1>
+                    <h1>Welcome back<br/>{user.firstName} {user.lastName}!</h1>
                     <button onClick={() => setFormDisplay(true)} className="edit-button">Edit Name</button>
                 </div>)
             }
